@@ -17,9 +17,18 @@ grad = zeros(size(theta));
 %               Compute the partial derivatives and set grad to the partial
 %               derivatives of the cost w.r.t. each parameter in theta
 
+const_val = 1/m;
+h_of_theta = sigmoid(X*theta);
 
+J = const_val*(sum(-y.*log(h_of_theta) - (1-y).*log(1-h_of_theta)) + (lambda/2)*sum(theta(2:end).^2));
 
+%theta0 shouldn't be regularized
+grad(1) = const_val*sum((h_of_theta - y).*X(:,1));
 
+% for loop start from 2 coz in octave indexing start from 1 and we don't want to regularize theta0 or in octave's case 1
+for i=2:size(theta, 1)
+	grad(i) = const_val*(sum((h_of_theta - y).*X(:,i)) + lambda*theta(i));
+end
 
 
 % =============================================================
