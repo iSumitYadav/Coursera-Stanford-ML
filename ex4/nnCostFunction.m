@@ -78,7 +78,36 @@ J = J + regularization;
 %         Hint: We recommend implementing backpropagation using a for-loop
 %               over the training examples if you are implementing it for the 
 %               first time.
-%
+
+for i = 1:m
+	% for l = 1 i.e. input layer
+	a1 = [1; X(i,:)'];
+
+	% for l = 2 i.e. second(hidden) layer
+	z2 = Theta1*a1;
+	a2 = [1; sigmoid(z2)];
+
+	% for l = 3 i.e. third(output) layer
+	z3 = Theta2*a2;
+	a3 = sigmoid(z3);
+
+	yk = ([1:num_labels] == y(i))';
+
+	delta3 = a3 - yk;
+
+	delta2 = (Theta2'*delta3).*[1; sigmoidGradient(z2)];
+	delta2 = delta2(2:end); % bias removed
+
+	% No need for delta1, as it'll be for input which isn't logical to calculate error in input
+
+	% calculate Caps delta
+	Theta1_grad += delta2*a1';
+	Theta2_grad += delta3*a2';
+end
+
+Theta1_grad = const_val * (Theta1_grad + lambda*[zeros(size(Theta1, 1), 1) Theta1(:,2:end)]);
+Theta2_grad = const_val * (Theta2_grad + lambda*[zeros(size(Theta2, 1), 1) Theta2(:,2:end)]);
+
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
