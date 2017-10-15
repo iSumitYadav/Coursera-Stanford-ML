@@ -21,11 +21,18 @@ idx = zeros(size(X,1), 1);
 % Note: You can use a for-loop over the examples to compute this.
 %
 
+m = size(X, 1);
 
+for i = 1:m
+	distArray = zeros(1, K);
 
+	for j = 1:K
+		distArray(1, j) = sqrt(sum(power((X(i, :) - centroids(j, :)), 2)));
+	end
 
-
-
+	[dist, dist_idx] = min(distArray);
+	idx(i, 1) = dist_idx;
+end
 
 % =============================================================
 
